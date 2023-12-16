@@ -1,0 +1,872 @@
+<mvc:View controllerName="robinCalculationEngine.controller.View1" xmlns:html="http://www.w3.org/1999/xhtml"
+xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core"
+xmlns:mvc="sap.ui.core.mvc"
+	displayBlock="true" xmlns="sap.m">
+	<App>
+		<pages>
+			<Page title="{i18n>title}">
+				<content>
+					
+					<Panel expandable="true"  width="auto"  class="sapUiResponsiveMargin">
+						<headerToolbar>
+							<OverflowToolbar style="Clear">
+								<Title text="{i18n>How to Define Soto ticket}" />
+								<ToolbarSpacer />
+								
+								
+							</OverflowToolbar>
+						</headerToolbar>
+						<content>
+							<VBox>
+								<Text text="Step 1: Collect user search like origin and destination.example BKK to LHR"></Text>
+								<Text text="Step 2: Get Agent Country based on Application access by Agent"></Text>
+								<Text text="Step 3: If origin or desitnation any of them is not under agent country then its soto ticket"></Text>
+							</VBox>
+						</content>
+					</Panel>
+					
+					
+					<Panel expandable="true"  width="auto"  class="sapUiResponsiveMargin">
+						<headerToolbar>
+							<OverflowToolbar style="Clear">
+								<Title text="{i18n>How to Search Soto ticket}" />
+								<ToolbarSpacer />
+								
+								
+							</OverflowToolbar>
+						</headerToolbar>
+						<content>
+							<VBox>
+								<Text text="Step 1: Have to look in Configuration table no 3."></Text>
+								<Text text="Step 2: Collect all airline codes and PCC number from table 3."></Text>
+								<Text text="Step 3: When call api then put respective PCC number and airline code. If fond then show data "></Text>
+							</VBox>
+							<Table id="sotoTable" headerText="Exceptional Soto List"
+							inset="false"
+							items="{
+								path: '/Soto_list_PCC'
+							}">
+		
+									<headerToolbar>
+									<Toolbar>
+										<Title text="If Soto then check this table, then only search for this airline"></Title>
+									</Toolbar>
+									</headerToolbar>
+									<columns>
+										<Column
+											width="10em">
+											<Text text="Ailine Code" />
+										</Column> 
+										
+										
+										
+										<Column
+											width="6em">
+											<Text text="PCC Owner" />
+										</Column>
+										
+										<Column
+											width="6em">
+											<Text text="PCC No" />
+										</Column>
+										
+										
+										
+										
+										
+									</columns>
+									<items>
+										<ColumnListItem vAlign="Middle">
+											<cells>
+												<Text
+													text="{airline_code}" />
+												<Text
+													text="{name}" />
+												<Text
+													text="{pcc_number}" />
+												
+												
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+						</content>
+					</Panel>
+					
+					<Panel expandable="true"  width="auto"  class="sapUiResponsiveMargin">
+						<headerToolbar>
+							<OverflowToolbar style="Clear">
+								<Title text="{i18n>Use PCC number  to call api  }" />
+								<ToolbarSpacer />
+								
+								
+							</OverflowToolbar>
+						</headerToolbar>
+						<content>
+							<VBox>
+								<Text text="Step 1: Get Country based on IP address or Agent log in Information."></Text>
+								<Text text="Step 2: Get  all PCC number from table 1 where Contry = User Country "></Text>
+								<Text text="Step 3: Check in table 2 that route. IF found the collect all PCC and use this pcc number to call api with included Airline code"></Text>
+								<Text text="Step 4: Identify PCC Numers  are not exist in TABLE 2 then use these PCC to call api without airline code."></Text>
+							</VBox>
+							<Table id="PCCTable" headerText="PCC List "
+											inset="false"
+											items="{
+													path: '/pcc_list'
+											}">
+										<headerToolbar>
+											<Toolbar>
+												<Title text="1.PCC List will be pulled based on user country or IP"></Title>
+											</Toolbar>
+										</headerToolbar>
+									<columns>
+										<Column
+											width="4em">
+											<Text text="ID" />
+										</Column> 
+										<Column
+											width="10em">
+											<Text text="Name" />
+										</Column>
+										<Column
+											width="6em">
+											<Text text="PCC No" />
+										</Column>
+										
+										<Column
+											minScreenWidth="Desktop"
+											demandPopin="true"
+											hAlign="Center">
+											<Text text="Country" />
+										</Column>
+										
+										
+									</columns>
+									<items>
+										<ColumnListItem vAlign="Middle">
+											<cells>
+												<Text
+													text="{id}" />
+												<Text
+													text="{name}" />
+												<Text
+													text="{pcc_number}" />
+												<Text
+													text="{counrty_name}" />
+												
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+							
+							<Table id="PCCRoute" headerText="PCC special route"
+							inset="false"
+							items="{
+								path: '/api_search_basedon_PCC_and_route'
+							}">
+		
+									<headerToolbar>
+									<Toolbar>
+										<Title text="2.Airline Code will be included in API call based on PCC if exist"></Title>
+									</Toolbar>
+								</headerToolbar>
+									<columns>
+										<Column
+											width="10em">
+											<Text text="From" />
+										</Column> 
+										<Column
+											width="10em">
+											<Text text="TO" />
+										</Column>
+										<Column
+											width="6em">
+											<Text text="PCC No" />
+										</Column>
+										
+										
+										<Column
+											width="6em">
+											<Text text="PCC Owner" />
+										</Column>
+										
+										<Column
+											minScreenWidth="Desktop"
+											demandPopin="true"
+											hAlign="Center">
+											<Text text="Airline Code" />
+										</Column>
+										<Column
+											minScreenWidth="Desktop"
+											demandPopin="true"
+											hAlign="Center">
+											<Text text="valid From" />
+										</Column>
+										<Column
+											minScreenWidth="Desktop"
+											demandPopin="true"
+											hAlign="Center">
+											<Text text="Valid To" />
+										</Column>
+										
+										
+									</columns>
+									<items>
+										<ColumnListItem vAlign="Middle">
+											<cells>
+												<Text
+													text="{route_from}" />
+												<Text
+													text="{route_to}" />
+												<Text
+													text="{pcc_number}" />
+												<Text
+													text="{pcc_owner}" />
+												<Text
+													text="{airline_code}" />
+												<Text
+													text="{valid_from}" />
+												<Text
+													text="{valid_to}" />
+												
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+						</content>
+					</Panel>
+					
+					<Panel expandable="true"  width="auto"  class="sapUiResponsiveMargin">
+						<headerToolbar>
+							<OverflowToolbar style="Clear">
+								<Title text="{i18n>Exclude Airline  when dispaly search results to Agent  }" />
+								<ToolbarSpacer />
+								
+								
+							</OverflowToolbar>
+						</headerToolbar>
+						<content>
+							<VBox>
+								<Text text="Step 1: Get Country based on IP address or Agent log in Information."></Text>
+								<Text text="Step 2: Find each Airline Code form APi Return results in table 6. "></Text>
+								<Text text="Step 3: If found then then that country id  found in available country."></Text>
+								<Text text="Step 4: If not found then particualre Ailine will not visible to Agent."></Text>
+							</VBox>
+							<Tree headerText="Allowed Airlines in Countries "
+								    id="Tree"
+								    items="{path: '/special_airlines'}">
+									<headerToolbar>
+									<Toolbar>
+										<Title text="6.Airline availability on Country.BA is not availble for Agents in BD"></Title>
+									</Toolbar>
+									</headerToolbar>
+									<StandardTreeItem title="{name} - {airline_code}"/>
+									
+								</Tree>
+						</content>
+					</Panel>
+					
+					
+						
+					<Panel id="pnlSearch" expandable="true"  width="auto"  class="sapUiResponsiveMargin">
+			<headerToolbar>
+				<OverflowToolbar style="Clear">
+					<Title text="{i18n>Price Configurations}" />
+					<ToolbarSpacer />
+					
+					
+				</OverflowToolbar>
+			</headerToolbar>
+			<content>
+						
+						<l:Grid id="Grid" defaultSpan="L6 M4 S12" class="sapUiSmallMarginTop">
+						<l:content>
+							
+							
+							
+							
+							
+							<Table id="AgentTable" headerText="Agent List"
+							inset="false"
+							items="{
+								path: '/agent_list'
+							}">
+		
+									<headerToolbar>
+									<Toolbar>
+										<Title text="Agent list on country based"></Title>
+									</Toolbar>
+									</headerToolbar>
+									<columns>
+										<Column
+											width="4em">
+											<Text text="ID" />
+										</Column> 
+										<Column
+											width="10em">
+											<Text text="Name" />
+										</Column>
+										
+										<Column
+											minScreenWidth="Desktop"
+											demandPopin="true"
+											hAlign="Center">
+											<Text text="Country" />
+										</Column>
+										<Column>
+											<Text text="Price MarkUP" />
+										</Column>
+										
+									</columns>
+									<items>
+										<ColumnListItem vAlign="Middle">
+											<cells>
+												<Text
+													text="{agent_id}" />
+												<Text
+													text="{agent_name}" />
+												<Text
+													text="{country_name}" />
+												<Text
+													text="{mark_up}" />
+												
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+								
+								
+								<Table id="OperationCountnTable" headerText="Operating Country"
+							inset="false"
+							items="{
+								path: '/operating_countries'
+							}">
+		
+									<headerToolbar>
+									<Toolbar>
+										<Title text="Operation in countries"></Title>
+									</Toolbar>
+									</headerToolbar>
+									<columns>
+										<Column
+											width="4em">
+											<Text text="ID" />
+										</Column> 
+										<Column
+											width="10em">
+											<Text text="Name" />
+										</Column>
+										
+									</columns>
+									<items>
+										<ColumnListItem vAlign="Middle">
+											<cells>
+												<Text
+													text="{country_id}" />
+												<Text
+													text="{country_name}" />
+												
+												
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+								
+								<Table id="taxTable" headerText="Operating Country"
+							inset="false"
+							items="{
+								path: '/ait_taxes'
+							}">
+		
+									<headerToolbar>
+									<Toolbar>
+										<Title text="AIT Tax based on country"></Title>
+									</Toolbar>
+									</headerToolbar>
+									<columns>
+										
+										<Column
+											width="10em">
+											<Text text="Name" />
+										</Column>
+										<Column
+											width="10em">
+											<Text text="Amount" />
+										</Column>
+										
+									</columns>
+									<items>
+										<ColumnListItem vAlign="Middle">
+											<cells>
+												<Text
+													text="{counrty_name}" />
+												<Text
+													text="{ait_tax_amount}" />
+												
+												
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+							<Table headerText="Special Price"
+									id="tableSpecialPrice"
+									width="auto"
+									class="sapUiResponsiveMargin">
+					
+									<headerToolbar>
+									<Toolbar>
+										<Title text="Any Special offer exist then impact on Pricing"></Title>
+									</Toolbar>
+									</headerToolbar>
+									<columns>
+										
+										<Column width="18em"  minScreenWidth="Tablet"
+									demandPopin="true">
+											<Text text="{i18n>Key Offerings}" />
+										</Column>
+									    
+										
+									</columns>
+					
+									
+								</Table>
+								
+								
+						
+								
+								
+								
+								
+								
+								
+							<Table id="commissionTable" 
+							inset="false"
+							items="{
+								path: '/pcc_owner_commision'
+							}">
+									<headerToolbar>
+									<Toolbar>
+										<Title text="Commission Provided by PCC agent "></Title>
+									</Toolbar>
+									</headerToolbar>
+									<columns>
+										 
+										<Column width="8em">
+											<Text text="Issuing Agent" />
+										</Column>
+										
+										<Column
+											width="5em">
+											<Text text="Airline Code " />
+										</Column>
+										<Column
+											width="6em">
+											<Text text="Commission " />
+										</Column>
+										<Column
+											width="8em">
+											<Text text="Valid From " />
+										</Column>
+										<Column
+											width="8em">
+											<Text text="Valid To" />
+										</Column>
+										
+									</columns>
+									<items>
+										<ColumnListItem vAlign="Middle">
+											<cells>
+												<Text
+													text="{pcc_owner_name}" />
+												<Text
+													text="{airline_code}" />
+												<Text
+													text="{commision}" />
+												<Text
+													text="{valid_from}" />
+												<Text
+													text="{valid_to}" />
+												
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+								
+								
+							<Table id="SPAirlineTable" headerText="Ticket Issue Airlines"
+							inset="false"
+							items="{
+								path: '/ticket_issue'
+							}">
+									<headerToolbar>
+									<Toolbar>
+										<Title text="This will be ignored if Airline selected any special offer "></Title>
+									</Toolbar>
+									</headerToolbar>
+									<columns>
+										<Column
+											width="5em">
+											<Text text="Airline" />
+										</Column> 
+										<Column>
+											<Text text="Issuing Agent" />
+										</Column>
+										
+										<!--Column
+											width="8em">
+											<Text text="Price MarkUP " />
+										</Column-->
+										
+									</columns>
+									<items>
+										<ColumnListItem vAlign="Middle">
+											<cells>
+												<Text
+													text="{airline_code}" />
+												<Text
+													text="{issuing_agent_name}" />
+												<!--Text
+													text="{price_markup}" /-->
+												
+												
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+								
+								
+								
+						<Table id="adminTable" headerText="Amdin markup"
+							inset="false"
+							items="{
+								path: '/admin_markup'
+							}">
+									<headerToolbar>
+									<Toolbar>
+										<Title text="Admin markup by range of cost "></Title>
+									</Toolbar>
+									</headerToolbar>
+									<columns>
+										<Column
+											width="7em">
+											<Text text="Min" />
+										</Column> 
+										<Column>
+											<Text text="Max" />
+										</Column>
+										<Column>
+											<Text text="Currency" />
+										</Column>
+										
+										<Column
+											width="8em">
+											<Text text="Markup " />
+										</Column>
+										
+									</columns>
+									<items>
+										<ColumnListItem vAlign="Middle">
+											<cells>
+												<Text
+													text="{min_range}" />
+												<Text
+													text="{max_range}" />
+												<Text
+													text="{currency}" />
+												<Text
+													text="{markup}" />
+												
+												
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+							
+							
+							<Table id="segmentTable" headerText="Segment amount"
+							inset="false"
+							items="{
+								path: '/segment_calculations'
+							}">
+		
+									<headerToolbar>
+									<Toolbar>
+										<Title text="Segment amount"></Title>
+									</Toolbar>
+									</headerToolbar>
+									<columns>
+										
+										<Column
+											width="8em">
+											<Text text="GDS Provider" />
+										</Column>
+										<Column
+											width="5em">
+											<Text text="Airline" />
+										</Column>
+										<Column
+											width="7em">
+											<Text text="Amount" />
+										</Column>
+										<Column
+											width="10em">
+											<Text text="Valid From" />
+										</Column>
+										<Column
+											width="10em">
+											<Text text="Valid To" />
+										</Column>
+										
+									</columns>
+									<items>
+										<ColumnListItem vAlign="Middle">
+											<cells>
+												<Text
+													text="{gds}" />
+												<Text
+													text="{airline_code}" />
+												<Text
+													text="{segment_amount}" />
+												<Text
+													text="{valid_from}" />
+												<Text
+													text="{valid_to}" />
+												
+												
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+							
+							
+					
+						</l:content>
+						</l:Grid>
+						
+						</content>
+		</Panel>
+		
+		
+		
+		
+						
+						<Table id="ApiTable" headerText="Api Data"
+							inset="false"
+							items="{
+								path: '/flights_api_data'
+							}">
+							
+							<headerToolbar>
+					<Toolbar>
+						<Title text="Api data"></Title>
+						<ToolbarSpacer />
+						<!--ComboBox id="CmbUser" change="onChangeUser"
+							items="{
+								path: '/agent_list',
+								sorter: { path: 'agent_name' }
+							}">
+							<core:Item key="{agent_id}" text="{agent_name} ( {mark_up}% )" />
+						</ComboBox>
+						<Button type="Emphasized" text="Calculate Price" press="onCalculatePrice"></Button-->
+						
+						
+					</Toolbar>
+				</headerToolbar>
+						
+						
+		
+									<columns>
+										<Column
+											width="2em">
+											<Text text="ID" />
+										</Column> 
+										<Column
+											width="4.2em">
+											<Text text="Provider" />
+										</Column> 
+										<Column
+											width="4em">
+											<Text text="PCC Owner" />
+										</Column> 
+										<Column
+											width="5em">
+											<Text text="Airline" />
+										</Column>
+										<Column
+											width="5em">
+											<Text text="Flight NO" />
+										</Column>
+										<Column
+											width="5em">
+											<Text text="Origin" />
+										</Column>
+										<Column
+											width="5em">
+											<Text text="destination" />
+										</Column> 
+										
+										<Column
+											width="10em">
+											<Text text="base Price" />
+										</Column> 
+										<Column
+											width="10em">
+											<Text text="Costing Price" />
+										</Column> 
+										
+									</columns>
+									<items>
+										<ColumnListItem vAlign="Middle">
+											<cells>
+												<Text
+													text="{ID}" />
+												<Text
+													text="{gds_provider}" />
+												<Text
+													text="{pcc_owner}" />
+												<Text
+													text="{airline_code}" />
+												<Text
+													text="{flight_no}" />
+												<Text
+													text="{origin}" />
+												<Text
+													text="{destination}" />
+												<Text
+													text="{price/base_price}" />
+												<Text
+													text="{price/costing_price}" />
+												
+												
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+								
+							
+						
+						
+						<FlexBox alignItems="Start" justifyContent="SpaceBetween">
+								<Text text=""></Text>
+								
+								<ComboBox id="CmbUser" change="onProcess"
+									items="{
+										path: '/agent_list',
+										sorter: { path: 'agent_name' }
+									}">
+									<core:Item key="{agent_id}" text="{agent_name} ( {mark_up}% )" />
+								</ComboBox>	
+						</FlexBox>
+							
+							<Table id="tablCalcosting" headerText="Costing Price Calculation"
+							inset="false"
+							>
+							
+						
+		
+									<columns>
+										
+										<Column
+											width="5em">
+											<Text text="Flight" />
+										</Column>
+										
+										<Column
+											width="8em">
+											<Text text="PCC Owner" />
+										</Column>
+										<Column
+											width="6em">
+											<Text text="Base Price" />
+										</Column>
+										<Column
+											width="9em">
+											<Text text="Tax" />
+										</Column>
+										<Column
+											width="10em">
+											<Text text="SP.Route Discount" />
+										</Column>
+										
+										<Column
+											width="12em">
+											<Text text="PCC Commission" />
+										</Column>
+										<Column
+											width="12em">
+											<Text text="Discount" />
+										</Column>
+										<Column
+											width="12em">
+											<Text text="Segment" />
+										</Column>
+										
+										<Column
+											width="10em">
+											<Text text="Costing Price" />
+										</Column>
+										<Column
+											width="10em">
+											<Text text="Ad Markup" />
+										</Column>
+										
+
+									</columns>
+									
+								</Table>
+							
+							
+					
+							
+							
+							<Table id="ApiTable1" headerText="Agent based Data"
+							inset="false"
+							>
+								
+						
+		
+									<columns>
+										
+										
+										<Column minScreenWidth="Desktop"
+											demandPopin="true" 
+											width="25em">
+											<Text text="Flight Info" />
+										</Column>
+										
+										<Column
+											width="25em">
+											<Text text="Cost Info" />
+										</Column>
+										 
+										
+										
+										<Column minScreenWidth="Desktop"
+											demandPopin="true"
+											width="8em">
+											<Text text="AdminMark Price" />
+										</Column> 
+										<Column
+											width="10em">
+											<Text text="Agent Name" />
+										</Column>
+										<Column minScreenWidth="Desktop"
+											demandPopin="true"
+											width="10em">
+											<Text text="Agent Price" />
+										</Column>
+										 
+										
+									</columns>
+									
+								</Table>
+					
+					
+					
+					
+				</content>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>
